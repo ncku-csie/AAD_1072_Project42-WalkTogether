@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/imageButton_walk"
+        android:icon="@drawable/walk"
+        android:orderInCategory="0"
+        android:title="" />
+
+    <item
+        android:id="@+id/imageButton_camera"
+        android:icon="@drawable/photo"
+        android:orderInCategory="1"
+        android:title="" />
+
+    <item
+        android:id="@+id/imageButton_map"
+        android:icon="@drawable/map"
+        android:orderInCategory="2"
+        android:title="" />
+
+    <item
+        android:id="@+id/imageButton_line"
+        android:icon="@drawable/talk"
+        android:orderInCategory="3"
+        android:title="" />
+</menu>

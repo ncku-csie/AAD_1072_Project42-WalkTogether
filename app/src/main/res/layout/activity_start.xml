@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/color_Background_walk"
+    tools:context="WalkTogether.com.activity.StartActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/imgebtn_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/color_Background_walk"
+            android:padding="50dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/welcome" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/Btn_welcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/color_Background_walk"
+            android:gravity="center_horizontal"
+            android:text="\nLET'S WALK\n——————————————\nLet's start to walk"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textStyle="normal|bold" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

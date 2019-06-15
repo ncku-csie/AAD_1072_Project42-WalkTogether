@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">WalkTogether</string>
+    <string name="title_activity_pair__page3_maps">Map</string>
+    <string name="title_activity_pair_page3_maps">Map</string>
+    <string name="title_activity_pair__pages3_map">Map</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main__single">MainActivity_Single</string>
+    <string name="title_activity_main__double">MainActivity_Double</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_chatroom">ChatroomActivity</string>
+    <string name="title_activity_info">InfoActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
+</resources>
