@@ -52,21 +52,24 @@ public class FCMService extends FirebaseMessagingService {
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
-        sendRegistrationToServer(token);
+//        sendRegistrationToServer(token);
     }
 
     private void initFCM(){
         FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
             @Override
             public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                Log.d("check_fcm", "initFCM: token: " + task.getResult().getToken());
-                sendRegistrationToServer(task.getResult().getToken());
+                if(task.isSuccessful()){
+                    Log.d("check_fcm", "initFCM: token: " + task.getResult().getToken());
+                    sendRegistrationToServer(task.getResult().getToken());
+                }
             }
         });
     }
 
     private void sendRegistrationToServer(String token) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        Log.d("check_fcm", mAuth+"");
         if(mAuth!=null){
             Log.d("check_fcm", "sendRegistrationToServer: sending token to server: " + token);
             Log.d("check_fcm", mAuth.getUid());
@@ -92,7 +95,7 @@ public class FCMService extends FirebaseMessagingService {
         notificationbuilder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.welcome)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setContentIntent(ResultPendingIntent);

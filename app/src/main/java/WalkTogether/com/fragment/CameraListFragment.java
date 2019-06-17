@@ -119,7 +119,7 @@ public class CameraListFragment extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Log.d("check_cameralist", String.valueOf(dataSnapshot));
-                listphotos.add(new Photo(String.valueOf(dataSnapshot.getKey()),String.valueOf(dataSnapshot.child("mood").getValue())));
+                listphotos.add(new Photo(String.valueOf(dataSnapshot.getKey()),String.valueOf(dataSnapshot.child("sentence").getValue())));
                 myAdapter = new RecycleViewAdapter(getActivity(), listphotos);
                 recyclerView.setAdapter(myAdapter);
             }

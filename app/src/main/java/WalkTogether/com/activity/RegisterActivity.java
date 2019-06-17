@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,7 +23,10 @@ import WalkTogether.com.R;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText Edit_name, Edit_email, Edit_password, Edit_age, Edit_sex;
+    private EditText Edit_name, Edit_email, Edit_password, Edit_age;
+    private RadioGroup radioGroup;
+    private RadioButton radioButton_male, radioButton_female;
+    private String sex;
 
     private FirebaseAuth mAuth;
 
@@ -34,11 +39,14 @@ public class RegisterActivity extends AppCompatActivity {
         Edit_email = findViewById(R.id.Register_email);
         Edit_password = findViewById(R.id.Register_password);
         Edit_age = findViewById(R.id.Register_age);
-        Edit_sex = findViewById(R.id.Register_sex);
+        radioGroup = findViewById(R.id.Register_sex);
+        radioButton_male = findViewById(R.id.sex_male);
+        radioButton_female = findViewById(R.id.sex_female);
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         Log.d("check_Register", String.valueOf(mAuth.getCurrentUser()));
+        monitoringRadioGrop();
 
     }
     public void Register(View v){
@@ -46,7 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
         final String email = Edit_email.getText().toString();
         final String password = Edit_password.getText().toString();
         final String age = Edit_age.getText().toString();
-        final String sex = Edit_sex.getText().toString();
+
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(
@@ -62,8 +70,8 @@ public class RegisterActivity extends AppCompatActivity {
                                     mdatabase.child("email").setValue(email);
                                     mdatabase.child("password").setValue(password);
                                     mdatabase.child("age").setValue(age);
-                                    mdatabase.child("sex").setValue(sex);
                                     mdatabase.child("match").setValue(0);
+                                    mdatabase.child("sex").setValue(sex);
                                     //寄驗證信
                                     sendVerificationEmail();
                                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
@@ -92,5 +100,23 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+    private void monitoringRadioGrop(){
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case R.id.sex_male:
+                        sex = "male";
+                        break;
+                    case R.id.sex_female:
+                        sex = "female";
+                        break;
+                    default:
+                        sex = "male";
+                        break;
+                }
+            }
+        });
     }
 }

@@ -1,2 +1,0 @@
-"# LetsWalk" 
-# WalkTogether

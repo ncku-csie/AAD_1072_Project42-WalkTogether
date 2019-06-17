@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -52,11 +53,10 @@ public class CameraFragment extends Fragment implements GoogleApiClient.Connecti
     private Double latitude, longitude;
     private LatLng latlng;
 
-    private RadioGroup mood_group;
-    private RadioButton mood_smile, mood_normal, mood_wow, mood_sad, mood_angry;
     private ImageView upload_image;
     private Bitmap bitmap;
     private TextView upload_date;
+    private EditText sentence;
     private Button upload_btn;
     private String Uid;
 
@@ -83,12 +83,7 @@ public class CameraFragment extends Fragment implements GoogleApiClient.Connecti
         upload_image = getActivity().findViewById(R.id.upload_image);
         upload_date = getActivity().findViewById(R.id.upload_date);
         upload_btn = getActivity().findViewById(R.id.upload_button);
-        mood_group = getActivity().findViewById(R.id.radioGroup);
-        mood_smile = getActivity().findViewById(R.id.mood_smile);
-        mood_normal = getActivity().findViewById(R.id.mood_normal);
-        mood_wow = getActivity().findViewById(R.id.mood_wow);
-        mood_sad = getActivity().findViewById(R.id.mood_sad);
-        mood_angry = getActivity().findViewById(R.id.mood_angry);
+        sentence = getActivity().findViewById(R.id.upload_sentence);
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         Log.d("check_WalkFragment", mAuth.getUid());
@@ -131,7 +126,7 @@ public class CameraFragment extends Fragment implements GoogleApiClient.Connecti
                         DatabaseReference mdatabase = FirebaseDatabase.getInstance().getReference();
                         mdatabase.child("Users").child(Uid).child("Photo").child(time).child("lat").setValue(latitude);
                         mdatabase.child("Users").child(Uid).child("Photo").child(time).child("lng").setValue(longitude);
-                        mdatabase.child("Users").child(Uid).child("Photo").child(time).child("mood").setValue(0);
+                        mdatabase.child("Users").child(Uid).child("Photo").child(time).child("sentence").setValue(sentence.getText().toString());
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

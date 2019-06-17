@@ -16,6 +16,7 @@ import WalkTogether.com.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
@@ -44,8 +45,9 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         Log.d("check_cameralist", "test");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         myViewHolder.photo_date.setText(mData.get(i).getImageFileName());
-        myViewHolder.photo_mood.setText(mData.get(i).getmood());
+        myViewHolder.photo_sentence.setText(mData.get(i).getmood());
 
         Picasso.with(mContext)
                 .load("https://firebasestorage.googleapis.com/v0/b/letswalk-c0e21.appspot.com/o/"+ mData.get(i).getImageFileName() +"?alt=media&token=0eb1f012-f558-40d8-bae1-af3ab61bef02")
@@ -61,7 +63,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView photo_date, photo_mood;
+        TextView photo_date, photo_sentence;
         ImageView img_photo;
 
         public MyViewHolder(View itemView) {
@@ -69,7 +71,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
             img_photo = itemView.findViewById(R.id.photo_image);
             photo_date = itemView.findViewById(R.id.photo_date);
-            photo_mood = itemView.findViewById(R.id.photo_mood);
+            photo_sentence = itemView.findViewById(R.id.photo_mood);
 
         }
     }

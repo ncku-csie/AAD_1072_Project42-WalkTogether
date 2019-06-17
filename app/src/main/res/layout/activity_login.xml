@@ -17,7 +17,6 @@
         android:id="@+id/imageButton3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/color_Background_walk"
         android:padding="50dp"
         android:scaleType="centerInside"
         app:srcCompat="@drawable/welcome" />
@@ -34,28 +33,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@color/color_Background_walk"
         android:gravity="center_vertical|center"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/Edit_Account"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:gravity="center_vertical|center_horizontal"
-            android:hint="信箱"
-            android:textColor="@android:color/background_light" />
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/Edit_Password"
+            <EditText
+                android:id="@+id/Edit_Account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="請輸入信箱"
+                android:textSize="18sp" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:gravity="center_vertical|center_horizontal"
-            android:hint="密碼"
-            android:inputType="textPassword"
-            android:textColor="@android:color/background_light" />
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/Edit_Password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="請輸入密碼"
+                android:inputType="textPassword" />
+
+        </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
 
@@ -63,26 +70,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@color/color_Background_walk"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/Btn_register"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/buttonshape"
-            android:onClick="Btn_Register"
-            android:text="註冊"
-            android:textColor="@android:color/background_light" />
-
-        <Button
+        <android.support.design.button.MaterialButton
             android:id="@+id/Btn_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/buttonshape"
             android:onClick="Btn_Login"
-            android:text="登入"
-            android:textColor="@android:color/background_light" />
+            android:text="登入" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="尚未有帳號嗎？請點這"
+            android:onClick="Btn_Register"/>
 
     </LinearLayout>
 

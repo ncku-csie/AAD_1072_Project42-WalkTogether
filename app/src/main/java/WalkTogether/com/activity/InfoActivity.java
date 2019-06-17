@@ -29,7 +29,7 @@ public class InfoActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
     private TextView info_name, info_age, info_sex;
-    private String room_key;
+    private String state;
     private MaterialCalendarView calendarview;
 
     @Override
@@ -60,42 +60,6 @@ public class InfoActivity extends AppCompatActivity {
                     info_name.setText(String.valueOf(dataSnapshot.child("name").getValue()));
                     info_age.setText("年齡 : " + dataSnapshot.child("age").getValue());
                     info_sex.setText("性別 : " + dataSnapshot.child("sex").getValue());
-                    room_key = String.valueOf(dataSnapshot.child("match").getValue());
-                    mDatabase.child("Room").child(room_key).child("date").addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            Log.d("check_info", String.valueOf(dataSnapshot));
-                            if(String.valueOf(dataSnapshot.child("state").getValue()).equals("1")) {
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                                try {
-                                    Date date = sdf.parse(String.valueOf(dataSnapshot.getKey()));
-                                    calendarview.setDateSelected(date, true);
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
                 }
 
                 @Override
@@ -103,10 +67,42 @@ public class InfoActivity extends AppCompatActivity {
 
                 }
             });
+            mDatabase.child("Users").child(mAuth.getUid()).child("state").addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    Log.d("check_info", String.valueOf(dataSnapshot));
+                    if(String.valueOf(dataSnapshot.getValue()).equals("1")) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        try {
+                            Date date = sdf.parse(String.valueOf(dataSnapshot.getKey()));
+                            calendarview.setDateSelected(date, true);
 
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
-
-
     }
-
 }

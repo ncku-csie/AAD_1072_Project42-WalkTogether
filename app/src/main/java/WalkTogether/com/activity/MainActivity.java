@@ -1,9 +1,16 @@
 package WalkTogether.com.activity;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -18,13 +25,17 @@ import android.widget.TextView;
 
 
 import WalkTogether.com.R;
+import WalkTogether.com.database.StepDataDao;
+import WalkTogether.com.database.StepEntity;
+import WalkTogether.com.constant.Constants;
 import WalkTogether.com.fragment.CameraListFragment;
 import WalkTogether.com.fragment.ChatroomFragment;
 import WalkTogether.com.fragment.MapFragment;
 import WalkTogether.com.fragment.MatchFragment;
-import WalkTogether.com.service.StepService;
 import WalkTogether.com.fragment.WalkFragment;
-import WalkTogether.com.service.FCMService;
+import WalkTogether.com.service.StepService;
+import WalkTogether.com.utils.StepCountCheckUtil;
+import WalkTogether.com.utils.TimeUtil;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -33,10 +44,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,  android.os.Handler.Callback{
 
     private static final int JOB_ID = 0;
     private static final long ONE_INTERVAL = 1 * 1000L;
@@ -46,8 +63,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private SensorManager mSensorManager;
     private DatabaseReference mdatabase;
     private FirebaseAuth mAuth;
-    private float now_step;
     private String now;
+    private TextView title;
+
+    private String curSelDate;
+    private DecimalFormat df = new DecimalFormat("#.##");
+    private List<StepEntity> stepEntityList = new ArrayList<>();
+    private StepDataDao stepDataDao;
+    private boolean isBind = false;
+    private Messenger mGetReplyMessenger = new Messenger(new Handler((Handler.Callback) this));
+    private Messenger messenger;
+    int per;
+    int steps;
 
 
 
@@ -56,8 +83,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        TextView title = findViewById(R.id.toobar_title);
+        title = findViewById(R.id.toobar_title);
         setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
         btmnav = findViewById(R.id.bottom_nav);
 
@@ -76,14 +104,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         mdatabase.child("Users").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                now_step = Float.parseFloat(dataSnapshot.child("step").child(now).getValue() + "");
                 mode = String.valueOf(dataSnapshot.child("match").getValue());
                 Log.d("check_MainActivity", mode);
-                if(mode.equals("0")){
+                if(mode.equals("0") || mode.equals("1")){
                     LoadFragment(new MatchFragment());
+                    title.setText("Let's Walk");
                     Log.d("check_MainActivity", "單人");
                 }else{
                     LoadFragment(new WalkFragment());
+                    title.setText("Let's Walk");
                     Log.d("check_MainActivity", "雙人");
                 }
              }
@@ -95,6 +124,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         });
 
       btmnav.setOnNavigationItemSelectedListener(MainActivity.this);
+
+    curSelDate = TimeUtil.getCurrentDate();
+    initData();
 
     }
 
@@ -144,23 +176,29 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         switch (menuItem.getItemId()){
             case R.id.imageButton_walk:
-                if(mode.equals("0")){
+                if(mode.equals("0") || mode.equals("1")){
                     fragment = new MatchFragment();
+                    title.setText("Let's Walk");
                 }else{
                     fragment = new WalkFragment();
+                    title.setText("Let's Walk");
                 }
                 break;
             case R.id.imageButton_camera:
                 fragment = new CameraListFragment();
+                title.setText("回憶紀錄");
                 break;
             case R.id.imageButton_map:
                 fragment = new MapFragment();
+                title.setText("回憶地圖");
                 break;
             case R.id.imageButton_line:
-                if(mode.equals("0")){
+                if(mode.equals("0") || mode.equals("1")){
                     fragment = new MatchFragment();
+                    title.setText("Let's Walk");
                 }else{
                     fragment = new ChatroomFragment();
+                    title.setText("聊天室");
                 }
                 break;
         }
@@ -193,16 +231,74 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return true;
     }
 
+    private void initData() {
+        if (StepCountCheckUtil.isSupportStepCountSensor(this)) {
+            getRecordList();
+            setupService();
+        }
+    }
+
+    private void updataonline() {
+        StepEntity stepEntity = stepDataDao.getCurDataByDate(curSelDate);
+        if (stepEntity != null) {
+            steps = Integer.parseInt(stepEntity.getSteps());
+        } else {
+            steps=0;
+        }
+        DatabaseReference mdatabase = FirebaseDatabase.getInstance().getReference();
+        mdatabase.child("Users").child(mAuth.getUid()).child("step").child(now).setValue(steps);
+    }
+
+    private void setupService() {
+        Intent intent = new Intent(this, StepService.class);
+        isBind = bindService(intent, conn, Context.BIND_AUTO_CREATE);
+        startService(intent);
+    }
+
+    private TimerTask timerTask;
+    private Timer timer;
+    private ServiceConnection conn = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, final IBinder service) {
+            timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    updataonline();
+                }
+            };
+            timer = new Timer();
+            timer.schedule(timerTask, 0, 10000);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+    private void getRecordList() {
+        stepDataDao = new StepDataDao(this);
+        stepEntityList.clear();
+        stepEntityList.addAll(stepDataDao.getAllDatas());
+    }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        startService(new Intent(MainActivity.this, FCMService.class));
-        startService(new Intent(MainActivity.this, StepService.class));
+    public boolean handleMessage(Message msg) {
+        switch (msg.what) {
+            case Constants.MSG_FROM_SERVER:
+                if (curSelDate.equals(TimeUtil.getCurrentDate())) {
+                    steps = msg.getData().getInt("steps");
+                }
+                break;
+        }
+        return false;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (isBind) this.unbindService(conn);
     }
+
 }
