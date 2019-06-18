@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/color_Background_walk"
-    tools:context="WalkTogether.com.activity.StartActivity">
+    tools:context="walktogether.com.activity.StartActivity">
 
 
     <LinearLayout

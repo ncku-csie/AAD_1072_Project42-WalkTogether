@@ -198,6 +198,43 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1007650815035:android:8450d8af382ebfdb",
+        "android_client_info": {
+          "package_name": "walktogether.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1007650815035-s23lh9batsltsgd9kf0s850ls8ie8hmk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "walktogether.com",
+            "certificate_hash": "77b9518157a9f2fbed527990d9d2786cfb3f3667"
+          }
+        },
+        {
+          "client_id": "1007650815035-o8rjqc8eue2n0b0460msrm7cktnu2o5s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA90TO3w70lFILmZtWkYmLsE5qX6bGvG6o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1007650815035-o8rjqc8eue2n0b0460msrm7cktnu2o5s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

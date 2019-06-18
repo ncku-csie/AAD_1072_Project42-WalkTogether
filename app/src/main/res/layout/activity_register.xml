@@ -120,7 +120,7 @@
             android:layout_weight="4"
             android:gravity="center">
 
-            <android.support.design.button.MaterialButton
+            <Button
                 android:id="@+id/Btn_Register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
